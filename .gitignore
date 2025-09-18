@@ -26,6 +26,7 @@ node_modules/
 dist/
 build/
 out/
+.next/
 
 # Environment variables
 .env
@@ -36,3 +37,7 @@ out/
 *.tmp
 temp/
 tmp/
+
+# Other directories to exclude
+-5-/
+push-to-github.sh
