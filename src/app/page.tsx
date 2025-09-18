@@ -3,9 +3,8 @@
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 
-import HolographicCard from '@/components/ui/holographic-card';
 import { Button } from '@/components/ui/moving-border';
-import { MessageCircle, FileText, CheckSquare, Clock, ArrowRight, FolderKanban, X } from 'lucide-react';
+import { MessageCircle, FileText, CheckSquare, Clock, FolderKanban, X } from 'lucide-react';
 import { Component as TextAnimation } from '@/components/ui/text-animation';
 
 import WarpShaderHero from '@/components/ui/wrap-shader';
@@ -28,7 +27,7 @@ export default function HomePage() {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      
+
       // 时间到了
       if (timeLeft === 0 && isRunning) {
         setIsRunning(false);
@@ -68,38 +67,68 @@ export default function HomePage() {
     setTimeLeft(isBreak ? 5 * 60 : 25 * 60);
   };
 
-  const features = [
+  // 奥运五环样式的功能配置 - 标准间距布局
+  const olympicRings = [
     {
       title: 'AI 对话',
-      description: '与多个AI模型进行智能对话，支持流式响应和提示词模板',
       icon: MessageCircle,
       href: '/chat',
-      color: 'from-blue-500 to-cyan-500',
-      features: ['多模型支持', '流式响应', '提示词模板', '对话历史'],
+      gradient: 'from-blue-500 to-cyan-500',
+      ringColor: 'ring-blue-500',
+      bgGradient: 'bg-gradient-to-r from-blue-500 to-cyan-500',
+      position: 'left-[5%] top-[15%]',
+      zIndex: 'z-30',
+      animation: 'animate-pulse',
+      delay: 'animation-delay-0',
     },
     {
       title: 'AI 笔记',
-      description: '智能笔记应用，支持AI自动生成标题、标签和内容优化',
       icon: FileText,
       href: '/notes',
-      color: 'from-purple-500 to-pink-500',
-      features: ['AI标题生成', '智能标签', '内容优化', 'Markdown支持'],
+      gradient: 'from-yellow-500 to-amber-500',
+      ringColor: 'ring-yellow-500',
+      bgGradient: 'bg-gradient-to-r from-yellow-500 to-amber-500',
+      position: 'left-[35%] top-[15%]',
+      zIndex: 'z-20',
+      animation: 'animate-pulse',
+      delay: 'animation-delay-200',
     },
     {
       title: '待办清单',
-      description: '智能待办事项管理，支持AI任务分解和优先级排序',
       icon: CheckSquare,
       href: '/todos',
-      color: 'from-green-500 to-emerald-500',
-      features: ['任务分解', '智能排序', '进度跟踪', '提醒功能'],
+      gradient: 'from-black to-gray-700',
+      ringColor: 'ring-gray-800',
+      bgGradient: 'bg-gradient-to-r from-black to-gray-700',
+      position: 'left-[65%] top-[15%]',
+      zIndex: 'z-30',
+      animation: 'animate-pulse',
+      delay: 'animation-delay-400',
     },
     {
       title: '项目管理',
-      description: '专业项目管理工具，支持看板视图、任务分配和进度追踪',
       icon: FolderKanban,
       href: '/projects',
-      color: 'from-indigo-500 to-blue-500',
-      features: ['看板视图', '任务分配', '进度追踪', '团队协作'],
+      gradient: 'from-green-500 to-emerald-500',
+      ringColor: 'ring-green-500',
+      bgGradient: 'bg-gradient-to-r from-green-500 to-emerald-500',
+      position: 'left-[20%] top-[50%]',
+      zIndex: 'z-40',
+      animation: 'animate-pulse',
+      delay: 'animation-delay-600',
+    },
+    {
+      title: '番茄钟',
+      icon: Clock,
+      href: '#',
+      onClick: () => setShowPomodoro(true),
+      gradient: 'from-red-500 to-pink-500',
+      ringColor: 'ring-red-500',
+      bgGradient: 'bg-gradient-to-r from-red-500 to-pink-500',
+      position: 'left-[50%] top-[50%]',
+      zIndex: 'z-40',
+      animation: 'animate-pulse',
+      delay: 'animation-delay-800',
     },
   ];
 
@@ -108,19 +137,6 @@ export default function HomePage() {
       {/* Warp Shader Background */}
       <div className="absolute inset-0">
         <WarpShaderHero />
-      </div>
-
-      {/* 番茄钟浮动按钮 */}
-      <div className="fixed top-6 right-6 z-50">
-        <button
-          onClick={() => setShowPomodoro(true)}
-          className="group relative w-14 h-14 bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-        >
-          <Clock className="h-6 w-6 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-            番茄钟
-          </div>
-        </button>
       </div>
 
       {/* 番茄钟弹窗 */}
@@ -133,49 +149,49 @@ export default function HomePage() {
             >
               <X className="h-4 w-4" />
             </button>
-            
+
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <Clock className="h-8 w-8 text-white" />
               </div>
-              
+
               <h3 className="text-2xl font-bold mb-2">
                 {isBreak ? '🌱 休息时间' : '🍅 专注时间'}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
                 {isBreak ? '放松一下，准备下轮专注' : '专心工作，避免分心'}
               </p>
-              
+
               <div className={`text-6xl font-mono font-bold mb-8 transition-colors ${
                 isRunning ? 'text-green-600' : isBreak ? 'text-blue-600' : 'text-gray-800 dark:text-gray-200'
               }`}>
                 {formatTime(timeLeft)}
               </div>
-              
+
               <div className="flex gap-4 justify-center">
                 {!isRunning ? (
-                  <button 
+                  <button
                     onClick={startPomodoro}
                     className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     {isBreak ? '开始休息' : '开始专注'}
                   </button>
                 ) : (
-                  <button 
+                  <button
                     onClick={pausePomodoro}
                     className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     暂停
                   </button>
                 )}
-                <button 
+                <button
                   onClick={resetPomodoro}
                   className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 >
                   重置
                 </button>
               </div>
-              
+
               <div className="mt-6 text-sm text-gray-500 dark:text-gray-400">
                 🍅 专注工作 • 🎵 音效提醒 • 🎨 多巴胺风格
               </div>
@@ -183,63 +199,92 @@ export default function HomePage() {
           </div>
         </div>
       )}
-      
+
       {/* Content Overlay */}
-      <div className="relative z-10 min-h-screen">
-        <div className="container mx-auto px-4 py-16">
-          {/* Header */}
-          <div className="text-center mb-3">
-            <div className="h-64 flex items-center justify-center">
-              <TextAnimation />
-            </div>
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center">
+        {/* Header */}
+        <div className="text-center mb-24">
+          <div className="h-32 flex items-center justify-center">
+            <TextAnimation />
+          </div>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 lg:gap-8 max-w-7xl mx-auto">
-          {features.slice(0, 4).map((feature) => (
-            <HolographicCard key={feature.title} className="group hover:shadow-lg transition-all duration-300">
-              <div className="pb-3 md:pb-4">
-                <div className={`w-8 h-8 md:w-12 md:h-12 rounded-lg bg-gradient-to-r ${feature.color} mb-2 md:mb-4 flex items-center justify-center`}>
-                  <feature.icon className="h-4 w-4 md:h-6 md:w-6 text-white" />
-                </div>
-                <h3 className="text-sm md:text-xl font-semibold leading-tight">{feature.title}</h3>
-                <p className="text-gray-700 dark:text-gray-300 text-xs md:text-sm mt-1 md:mt-1.5 line-clamp-2 md:line-clamp-none">
-                  {feature.description}
-                </p>
-              </div>
-              
-              <div>
-                <div className="space-y-1 md:space-y-2 mb-2 md:mb-4">
-                  {feature.features.slice(0, 2).map((item) => (
-                    <div key={item} className="flex items-center text-xs md:text-sm text-gray-600 dark:text-gray-400">
-                      <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-current mr-1.5 md:mr-2 flex-shrink-0" />
-                      <span className="truncate">{item}</span>
+        {/* Olympic Rings Layout */}
+        <div className="relative w-[900px] h-[450px] mx-auto">
+          <style jsx>{`
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-10px); }
+            }
+            @keyframes fadeInScale {
+              0% {
+                opacity: 0;
+                transform: scale(0.5) rotate(-180deg);
+              }
+              100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+              }
+            }
+            .ring-animation-0 { animation: fadeInScale 0.8s ease-out, float 3s ease-in-out 0.8s infinite; }
+            .ring-animation-1 { animation: fadeInScale 0.8s ease-out 0.1s, float 3s ease-in-out 0.9s infinite; }
+            .ring-animation-2 { animation: fadeInScale 0.8s ease-out 0.2s, float 3s ease-in-out 1s infinite; }
+            .ring-animation-3 { animation: fadeInScale 0.8s ease-out 0.3s, float 3s ease-in-out 1.1s infinite; }
+            .ring-animation-4 { animation: fadeInScale 0.8s ease-out 0.4s, float 3s ease-in-out 1.2s infinite; }
+          `}</style>
+          {olympicRings.map((ring, index) => (
+            <div
+              key={ring.title}
+              className={`absolute ${ring.position} ${ring.zIndex} ring-animation-${index}`}
+              style={{
+                opacity: 0,
+                animation: `fadeInScale 0.8s ease-out ${index * 0.1}s forwards, float 3s ease-in-out ${0.8 + index * 0.1}s infinite`
+              }}
+            >
+              {ring.onClick ? (
+                <button
+                  onClick={ring.onClick}
+                  className="group relative transform transition-all duration-300 hover:scale-125 hover:rotate-6"
+                >
+                  {/* 圆环外圈 */}
+                  <div className={`w-36 h-36 rounded-full border-[16px] border-transparent ${ring.bgGradient} p-[16px] shadow-lg group-hover:shadow-2xl transition-all duration-300`}>
+                    {/* 内圈白色背景 */}
+                    <div className="w-full h-full rounded-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md flex items-center justify-center group-hover:bg-white dark:group-hover:bg-gray-900 transition-colors duration-300">
+                      <ring.icon className="h-14 w-14 text-gray-700 dark:text-gray-300 group-hover:scale-110 transition-transform duration-300" />
                     </div>
-                  ))}
-                  {/* 隐藏的特性列表，仅在桌面端显示 */}
-                  <div className="hidden md:block space-y-2">
-                    {feature.features.slice(2).map((item) => (
-                      <div key={item} className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <div className="w-1.5 h-1.5 rounded-full bg-current mr-2 flex-shrink-0" />
-                        <span className="truncate">{item}</span>
-                      </div>
-                    ))}
                   </div>
-                </div>
-                
-                <Link href={feature.href}>
-                  <Button className="w-full text-xs md:text-sm py-1.5 md:py-2" variant="default" size="sm">
-                    <span className="md:hidden">使用</span>
-                    <span className="hidden md:inline">开始使用</span>
-                    <ArrowRight className="ml-1 md:ml-2 h-3 w-3 md:h-4 md:w-4" />
-                  </Button>
+                  {/* Hover 提示 */}
+                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-gray-900 to-gray-800 text-white text-sm px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none shadow-xl">
+                    {ring.title}
+                  </div>
+                </button>
+              ) : (
+                <Link href={ring.href} className="group relative block transform transition-all duration-300 hover:scale-125 hover:rotate-6">
+                  {/* 圆环外圈 */}
+                  <div className={`w-36 h-36 rounded-full border-[16px] border-transparent ${ring.bgGradient} p-[16px] shadow-lg group-hover:shadow-2xl transition-all duration-300`}>
+                    {/* 内圈白色背景 */}
+                    <div className="w-full h-full rounded-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md flex items-center justify-center group-hover:bg-white dark:group-hover:bg-gray-900 transition-colors duration-300">
+                      <ring.icon className="h-14 w-14 text-gray-700 dark:text-gray-300 group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                  </div>
+                  {/* Hover 提示 */}
+                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-gray-900 to-gray-800 text-white text-sm px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none shadow-xl">
+                    {ring.title}
+                  </div>
                 </Link>
-              </div>
-            </HolographicCard>
+              )}
+            </div>
           ))}
         </div>
-        
 
+        {/* 底部说明 */}
+        <div className="mt-24 text-center space-y-2">
+          <p className="text-gray-600 dark:text-gray-400 text-sm animate-pulse">
+            🏅 点击圆环进入功能 • 悬停查看名称 🏅
+          </p>
+          <p className="text-gray-500 dark:text-gray-500 text-xs">
+            极简五环界面 • 奥运精神 • 追求卓越
+          </p>
         </div>
       </div>
     </div>
